@@ -1,0 +1,225 @@
+---
+description: User mentions creating an implementation plan, create a doc, or start a plan, follow these rules to create that plan.
+globs:
+alwaysApply: false
+---
+# PRD Creation Rules
+
+## 🎯 Goal: Create comprehensive implementation plans for features
+
+## ⚙️ Parameters:
+- {{FRONTEND_DOCS_PATH}} = README.md
+- {{BACKEND_DOCS_PATH}} = README.md
+- {{DB_SCHEMA_PATH}} = 
+- {{BACKEND_API_DIR}} = src/app/api
+- {{API_DOCS_PATH}} = 
+- {{MOBILE_IOS_INFO_PLIST}} = GFactorApp/iosApp/iosApp/Info.plist
+- {{PRD_OUTPUT_DIR}} = docs/
+- {{TEST_CMD_BACKEND}} = npm run test
+- {{LINT_CMD_BACKEND}} = npm run lint
+- {{COVERAGE_THRESHOLD}} = 80%
+  
+## 📚 Reference Architecture (CUSTOMIZE FOR YOUR PROJECT)
+- **Frontend**: {{FRONTEND_DOCS_PATH}} - Your frontend architecture and patterns
+- **Backend**: {{BACKEND_DOCS_PATH}} - Your backend services and API endpoints
+- **API Contracts**: {{API_DOCS_PATH}} - Complete API specifications
+- **Documentation Standards**: {{DOCUMENTATION_STANDARDS_PATH}} - Evidence-based documentation
+- **Production Database**: {{DATABASE_PROVIDER}} (`{{DATABASE_PROJECT_ID}}`)
+- **Production API**: `{{PRODUCTION_API_URL}}`
+
+## Required Components
+- **Summary** - Clear goal statement
+- **User Stories** - Expected behaviors (see Gherkin Framework below)
+- **Affected Files** - Real file paths (use codebase_search first)
+- **Git Strategy** - Branch naming for entire plan, commit checkpoints for each phase
+- **QA Strategy** - LLM self-test + manual user verification
+
+## 📝 Gherkin Framework (Use Throughout All Steps)
+Write clear, testable scenarios using Given/When/Then format for:
+
+### **User Stories** (Step 3):
+```gherkin
+Scenario: [Feature name]
+  Given [user context/starting state]
+  When [user action]
+  Then [expected outcome]
+```
+
+### **Screen Behaviors** (Step 2 Design):
+```gherkin
+Scenario: [Screen interaction]
+  Given [screen state]
+  When [user interaction]
+  Then [UI response/feedback]
+```
+
+### **Technical Validation** (QA):
+```gherkin
+Scenario: [Technical requirement]
+  Given [system state]
+  When [trigger event]
+  Then [expected system behavior]
+```
+
+## 🚫 Forbidden Language Patterns
+
+### **Marketing/Hype Terms** - NEVER USE:
+- ❌ "Revolutionary", "breakthrough", "game-changing", "cutting-edge"
+- ❌ "Advanced", "sophisticated", "intelligent", "smart" (unless technically accurate)
+- ❌ "Seamless", "effortless", "powerful", "robust" (overused marketing terms)
+- ❌ "State-of-the-art", "next-generation", "innovative", "disruptive"
+
+### **Aspirational Claims** - VERIFY FIRST:
+- ❌ "Comprehensive [feature]" (unless you can prove comprehensive coverage)
+- ❌ "Full support for [technology]" (unless every aspect is implemented)
+- ❌ "Advanced [capability]" (be specific about what's actually advanced)
+- ❌ Future dates in past tense: "Implemented January 2025" (when it's planned)
+
+### **File Path Evidence**
+When documenting code features, include file paths:
+```markdown
+✅ "Authentication handled in `{{PROJECT_PATH}}/services/auth_service.py:45`"
+❌ "Advanced authentication system with JWT management"
+```
+
+## Step 1: Core Areas to Explore
+- **Investigation** - What unknowns need resolution?
+- **Expected Behavior** - Use Gherkin scenarios (see framework above)
+- **Core Functionality** - Key user actions
+- **Scope/Boundaries** - What this should NOT do
+- **File Requirements** - What files need changes?
+- **Data Schema** - Database schema changes needed?
+- **Design/UI** - Missing designs or mockups?
+- **State/Interactions** - Follow your project's state management patterns
+
+## Step 2: Design Clarity Check
+**⚠️ TRIGGER**: For any new screens OR major UI/UX changes beyond small copy/layout adjustments
+
+### 🎨 Screen Design Checklist (Complete BEFORE implementation planning)
+1. **Screen Purpose**: Can I describe this screen's purpose in one sentence?
+   - _"This screen lets the user ___ so they can ___"_
+   - Does every UI element support that purpose?
+
+2. **Input → Output Mapping**:
+   - What are the user's inputs? (tap, scroll, swipe)
+   - What is the expected output? (data, animation, feedback)
+   - Is the input → output loop visible and fast?
+
+3. **Key Actions Hierarchy**:
+   - What's the ONE main action the user should take?
+   - Is it visually dominant? (size, color, position)
+   - Are secondary actions clearly subordinate?
+
+4. **Layout Skeleton**:
+   - Can I break the layout into 5 or fewer logical blocks?
+   - Are groups visually chunked by function?
+   - Is spacing consistent and breathing?
+
+5. **Visual Chunks & Information Architecture**:
+   - How is information grouped and prioritized?
+   - What's the visual hierarchy (primary → secondary → tertiary)?
+   - Does the layout support your platform's interaction patterns?
+
+6. **Behavior Clarity**:
+   - Write clear Gherkin scenarios for screen interactions
+   - Does the screen do only one job clearly?
+
+**✅ GATE**: Complete design checklist before proceeding to implementation planning
+
+## Step 3: Implementation Plan Components
+- **Goals** - What we're achieving and how
+- **User Stories** - Detailed expected behaviors (use Gherkin framework above)
+- **Functional Requirements** - Numbered, specific functionalities
+- **Non-Goals** - Clear scope boundaries
+- **Success Metrics** - Measurable criteria
+- **Affected Files** - Include file paths (search first!)
+- **🔍 Implementation Assumptions** - REQUIRED for review handoff (see below)
+- **Git Strategy** - Branch naming, commit checkpoints
+
+## 🔍 Implementation Assumptions Section (MANDATORY)
+
+**ALWAYS include this section to track what needs verification during PRD Review:**
+
+### Backend Assumptions (MUST AUDIT)
+- **API Endpoints**: List assumed endpoints (e.g., `POST {{API_BASE}}/{{RESOURCE}}/analytics`)
+- **Service Classes**: List assumed classes (e.g., `{{ServiceName}}Service`, `{{HandlerName}}Handler`)
+- **Database Fields**: List assumed columns/tables (e.g., `{{table}}.{{field}}`, `analytics.chart_data`)
+- **Existing Methods**: List assumed methods (e.g., `{{Service}}.calculateStats()`)
+
+### Frontend Assumptions (MUST AUDIT)
+- **View Properties**: List assumed @Published properties (e.g., `ViewModel.isLoading`, `Manager.currentState`)
+- **Methods**: List assumed methods (e.g., `{{Manager}}.updateState()`, `{{View}}.startAction()`)
+- **Navigation**: List assumed flows (e.g., `{{MainView}} → {{TabView}} → {{FeatureView}}`)
+- **State Bindings**: List assumed bindings (e.g., `@StateObject {{manager}}`, `@ObservedObject {{viewModel}}`)
+
+### Database Schema Assumptions (MUST AUDIT)
+- **Tables**: List assumed tables exist (e.g., `analytics`, `user_preferences`)
+- **Columns**: List assumed columns (e.g., `{{table}}.{{field}}`, `exercises.category_id`)
+- **Relationships**: List assumed foreign keys (e.g., `{{child_table}}.{{parent_id}} → {{parent_table}}.id`)
+
+### Example Implementation Assumptions:
+```markdown
+## 🔍 Implementation Assumptions
+
+### Backend Assumptions (MUST AUDIT)
+- API Endpoint: `GET {{API_BASE}}/analytics/{{resource}}/charts` (UNCERTAIN - might not exist)
+- Service Class: `{{AnalyticsService}}.calculate_kpis()` (ASSUMED - don't know actual service structure)
+- Database Field: `{{table}}.{{metric_field}}` (HOPED - unsure if metric data exists)
+
+### Frontend Assumptions (MUST AUDIT)
+- Property: `{{AnalyticsViewModel}}.chartData` (@Published) (GUESSED - don't know actual ViewModel structure)
+- Method: `{{AnalyticsService}}.fetchStats()` (ASSUMED - might use different pattern)
+- Navigation: `{{HistoryView}} → {{DetailView}}` (UNCERTAIN - navigation might be different)
+
+### Database Schema Assumptions (MUST AUDIT)
+- Table: `{{analytics_table}}` (ASSUMED - might not exist, might use different structure)
+- Column: `{{table}}.{{calculated_field}}` (GUESSED - unsure if this calculated field exists)
+```
+
+**Confidence Levels for Assumptions:**
+- **CERTAIN**: 95%+ sure this exists/works as described
+- **LIKELY**: 70%+ sure, based on similar patterns in codebase
+- **UNCERTAIN**: 50/50, educated guess
+- **HOPED**: <30% sure, wishful thinking
+- **ASSUMED**: No verification, pure assumption
+
+**Purpose**: These assumptions become the audit checklist for `@03-prd-review.mdc`. Be honest about uncertainty!
+
+## 🚨 Production Safety - NO MOCKS ALLOWED
+**LIVE APPLICATION with real users. NO mock data/endpoints/functions/placeholders.**
+
+**Production Pipeline**: {{DATABASE}} → {{BACKEND_FRAMEWORK}} → {{API_LAYER}} → {{CLIENT_SDK}} → {{FRONTEND}}
+
+## File Discovery Rules
+- **Search First** - Use `codebase_search` before assuming paths
+- **Verify Locations** - Check actual file locations before planning
+- **Read Architecture Docs** - Check your project's architecture guides before creating new patterns
+- **Check API Contracts** - Reference existing endpoint patterns and data models
+
+## Output Requirements
+- **Format**: Markdown `.md`
+- **Location**: `{{IMPLEMENTATION_PLANS_PATH}}/YYYY-MM-DD-[type]-desc.md`
+- **Audience**: Junior developer with no context
+- **Documentation Standards**: Follow evidence-based documentation principles
+- **Current Date**: Check system time for timestamps
+
+## Workflow Integration
+1. **PRD Creation** (this rule) → 2. **PRD Review** (@03-prd-review.mdc) → 3. **Task Execution** (@04-prd-execute.mdc)
+
+## 🎨 Additional Design States & Considerations
+- **Empty States**: What happens when there's no data?
+- **Loading States**: How do we show processing/network activity?
+- **Success States**: How do we celebrate completed actions?
+- **Error States**: How do we handle failures gracefully?
+- **Accessibility**: Does it work with platform accessibility features?
+- **Brand Alignment**: Does it align with your product's tone and brand?
+
+## Simplicity & Platform API Guidance
+
+> **Guidance for Implementation Plans:**
+>
+> - Favor the simplest solution that meets the requirements
+> - Leverage platform APIs (e.g., URLSession, Core Data, built-in networking) for standard functionality
+> - Avoid custom logic for networking, retry, concurrency, or state management unless documented need exists
+> - If advanced or defensive patterns are proposed, include clear justification for why platform APIs are insufficient
+> - Overengineering and excessive defensive code should be avoided to ensure maintainability and clarity

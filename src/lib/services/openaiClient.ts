@@ -2,15 +2,17 @@ import fetch from 'node-fetch';
 import { JiraIssue } from './jiraClient';
 
 export async function summarizeWithLLM(issues: JiraIssue[]) {
-  const issueText = issues.map(i => `- [${i.fields.project.key}] ${i.fields.summary} (Status: ${i.fields.status.name}, Assignee: ${i.fields.assignee?.displayName || 'Unassigned'})`).join('\n');
-
+  const issueText = issues.map(i => `- [${i.fields.project.key}] ${i.fields.summary} (Status: ${i.fields.status.name}, Assignee: ${i.fields.assignee?.displayName || 'Unassigned'}`);
+  
   const prompt = `You're a software engineering executive (EVP) at a fast-moving software company.\n
-  You are interested in understanding the status of issues in JIRA with enough detail to help you represent the various teams you work with.\n
+  You are interested in understanding the status of issues in JIRA with enough detail to help you represent the various teams you work with.\n 
   Here's a list of JIRA issues from projects provided in a JQL query. There are 3 key fields in the issue: Status, Assignee, and Project. I would like you to summarize the following:
 
-1. Key progress updates
-2. Any issues that look blocked or stale
-3. Anything worth following up on or that poses a delivery risk
+  1. Key progress updates
+  2. Any issues that look blocked or stale
+  3. Anything worth following up on or that poses a delivery risk
+  4. It's important to look at the transition of issues from one status to another to understand the flow of work, work that moves backwards such as back to ["In Progress", "Code Review", "Ready for QA", "Ready for Release"] from "Done" is a sign of a problem.
+  5. JIRA provides a changelog for each issue, this is a good place to look for updates to the issue. You can use the "items" array in the response to get the details of the changes using the "field", "fromString", and "toString" fields.
 
 - '#' for headings
 - '-' for bullet points
