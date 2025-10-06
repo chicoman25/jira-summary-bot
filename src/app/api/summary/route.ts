@@ -3,7 +3,17 @@ import { getSummary } from '../../../lib/services/summarizer';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json().catch(() => ({} as any));
+    let body: any = {};
+    const contentType = request.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      body = await request.json().catch(() => ({} as any));
+    } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
+      const form = await request.formData();
+      const projectsFromForm = form.getAll('projects[]');
+      body.projects = projectsFromForm.length ? projectsFromForm : undefined;
+      const daysFromForm = form.get('days');
+      if (daysFromForm) body.days = Number(daysFromForm);
+    }
 
     const projectsFromBody: unknown = body?.projects;
     const projects = Array.isArray(projectsFromBody)
