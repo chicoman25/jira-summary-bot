@@ -81,6 +81,30 @@ export default class SummaryClient extends React.Component<{}, State> {
         <div className="mt-2 rounded-md border border-gray-200 bg-white p-4 min-h-40">
           {summary ? <MarkdownViewer markdown={summary} /> : <p className="text-sm text-gray-500">No summary yet.</p>}
         </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            disabled={!summary}
+            onClick={() => {
+              if (!summary) return;
+              const blob = new Blob([summary], { type: 'text/markdown;charset=utf-8' });
+              const url = URL.createObjectURL(blob);
+              const fileSafeProjects = projectsInput.trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9,_-]/g, '') || 'summary';
+              const date = new Date().toISOString().slice(0, 10);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `jira-summary-${fileSafeProjects}-${date}.md`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }}
+            className="inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-white text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Download Markdown
+          </button>
+        </div>
       </div>
     );
   }
