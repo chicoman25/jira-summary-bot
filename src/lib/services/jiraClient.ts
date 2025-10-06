@@ -19,9 +19,10 @@ export interface JiraIssue {
 export async function getRecentIssues(projects: string[], days: number) {
   const jql = `project IN (${projects.join(',')}) AND updated >= -${days}d ORDER BY updated DESC`;
 
-  const url = new URL(`${process.env.JIRA_BASE_URL}/rest/api/3/search`);
+  const url = new URL(`${process.env.JIRA_BASE_URL}/rest/api/3/search/jql`);
   url.searchParams.append('jql', jql);
   url.searchParams.append('maxResults', '50');
+  url.searchParams.append('expand', 'changelog');
   url.searchParams.append('fields', 'summary,status,assignee,updated,project');
 
   const auth = Buffer.from(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_TOKEN}`).toString('base64');
