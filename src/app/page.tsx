@@ -1,15 +1,17 @@
+import MarkdownViewer from './components/MarkdownViewer';
+
 export default function HomePage() {
   return (
     <main className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-semibold mb-4">JIRA Summary</h1>
       <p className="text-sm text-gray-600 mb-6">Enter comma-separated project keys and number of days.</p>
 
-      <form id="summaryForm" method="post" action="/api/summary" className="space-y-4 bg-white p-4 rounded-lg shadow">
+      <form id="summaryForm" className="space-y-4 bg-white p-4 rounded-lg shadow">
         <div className="space-y-2">
           <label htmlFor="projects" className="block text-sm font-medium">Projects</label>
           <input
             id="projects"
-            name="projects[]"
+            name="projects"
             placeholder="ABC, DEF, GHI"
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -41,7 +43,7 @@ export default function HomePage() {
       <div className="mt-6 space-y-2">
         <h2 className="text-lg font-semibold">Response</h2>
         <div id="errorBox" className="hidden rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700"></div>
-        <div id="summaryOutput" className="min-h-40 whitespace-pre-wrap rounded-md border border-gray-300 bg-white p-4 text-sm leading-6"></div>
+        <div id="summaryOutput" className="prose prose-slate max-w-none rounded-md border border-gray-200 bg-white p-4"></div>
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -71,7 +73,6 @@ export default function HomePage() {
                   var data = await res.json();
                   if(!res.ok){ throw new Error(data && data.error ? data.error : ('Request failed ('+res.status+')')); }
                   var summary = (data && data.summary) ? String(data.summary) : '';
-                  if(!summary){ output.textContent = 'No summary returned.'; return; }
                   if(window.marked && window.marked.parse){ output.innerHTML = window.marked.parse(summary); }
                   else { output.textContent = summary; }
                 } catch(err){
