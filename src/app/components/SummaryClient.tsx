@@ -12,7 +12,7 @@ type State = {
 };
 
 export default class SummaryClient extends React.Component<{}, State> {
-  state: State = { projectsInput: '', days: 7, loading: false, error: null, summary: '' };
+  state: State = { projectsInput: '', days: 14, loading: false, error: null, summary: '' };
 
   handleProjectsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ projectsInput: e.target.value });
@@ -56,7 +56,7 @@ export default class SummaryClient extends React.Component<{}, State> {
               id="projects"
               value={projectsInput}
               onChange={this.handleProjectsChange}
-              placeholder="ABC, DEF, GHI"
+              placeholder="ACD, PE, ACO, ADA, CTI"
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
