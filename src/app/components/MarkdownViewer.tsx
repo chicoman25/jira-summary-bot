@@ -1,6 +1,6 @@
 'use client';
 
-import * as Marked from 'marked';
+import MarkdownIt from 'markdown-it';
 
 function preprocessMarkdown(input: string): string {
   if (!input) return '';
@@ -13,21 +13,9 @@ function preprocessMarkdown(input: string): string {
 }
 
 export default function MarkdownViewer({ markdown }: { markdown: string }) {
-  const anyMarked: any = Marked as any;
-  if (typeof anyMarked.setOptions === 'function') {
-    anyMarked.setOptions({ gfm: true, breaks: true, headerIds: false, mangle: false });
-  }
+  const md = new MarkdownIt({ html: false, linkify: true, typographer: true, breaks: true });
   const normalized = preprocessMarkdown(markdown || '');
-  let html = normalized;
-  try {
-    if (typeof anyMarked.parse === 'function') {
-      html = anyMarked.parse(normalized);
-    } else if (typeof anyMarked.marked === 'function') {
-      html = anyMarked.marked(normalized);
-    }
-  } catch {
-    html = normalized;
-  }
+  let html = md.render(normalized);
   return (
     <article className="prose prose-slate max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
   );
